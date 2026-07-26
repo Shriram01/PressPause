@@ -1,9 +1,9 @@
-﻿namespace PressPause.Domain.Entities;
+﻿using PressPause.Domain.Common;
 
-public sealed class Game
+namespace PressPause.Domain.Entities;
+
+public sealed class Game : BaseEntity
 {
-    public Guid Id { get; set; }
-
     public string Title { get; set; } = string.Empty;
 
     public string Slug { get; set; } = string.Empty;
