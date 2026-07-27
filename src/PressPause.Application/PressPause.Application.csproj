@@ -1,8 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <ProjectReference Include="..\PressPause.Domain\PressPause.Domain.csproj" />
-      <ProjectReference Include="..\PressPause.Shared\PressPause.Shared.csproj" />
+        <ProjectReference Include="..\PressPause.Domain\PressPause.Domain.csproj"/>
+        <ProjectReference Include="..\PressPause.Shared\PressPause.Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Collections\"/>
+        <Folder Include="Common\Behaviors\"/>
+        <Folder Include="Common\Mapping\"/>
+        <Folder Include="Games\DTOs\"/>
+        <Folder Include="Platforms\"/>
+        <Folder Include="Reviews\"/>
+        <Folder Include="Users\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+        <PackageReference Include="MediatR"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
     </ItemGroup>
 
     <PropertyGroup>
