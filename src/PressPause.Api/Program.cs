@@ -1,6 +1,7 @@
 using PressPause.Api.Endpoints.Games;
 using PressPause.Application;
 using PressPause.Infrastructure;
+using PressPause.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseGlobalExceptionHandling();
 
 app.MapCreateGameEndpoint();
 
