@@ -18,7 +18,8 @@ public static class GetGamesEndpoint
                     var result = await sender.Send(
                         new GetGamesQuery(
                             pagination.Page,
-                            pagination.PageSize));
+                            pagination.PageSize,
+                            pagination.Search));
 
                     return Results.Ok(result);
                 })

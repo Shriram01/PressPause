@@ -21,6 +21,7 @@ public sealed class GetGamesQueryHandler
         var (games, totalCount) = await _repository.GetPagedAsync(
             request.Page,
             request.PageSize,
+            request.Search,
             cancellationToken);
 
         return new PagedResult<GameDto>

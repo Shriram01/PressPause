@@ -8,7 +8,11 @@ public interface IGameRepository
 
     Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken);
 
-    Task<(IReadOnlyList<Game> Items, int TotalCount)> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken);
+    Task<(IReadOnlyList<Game> Items, int TotalCount)> GetPagedAsync(
+        int page,
+        int pageSize,
+        string? search,
+        CancellationToken cancellationToken);
 
     Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 

@@ -27,14 +27,22 @@ internal sealed class GameRepository : IGameRepository
     public async Task<(IReadOnlyList<Game> Items, int TotalCount)> GetPagedAsync(
         int page,
         int pageSize,
+        string? search,
         CancellationToken cancellationToken)
     {
-        var query = _context.Games.AsNoTracking();
+        IQueryable<Game> query = _context.Games.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(g =>
+                g.Title.Contains(search) ||
+                g.Slug.Contains(search));
+        }
 
         var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query
-            .OrderBy(x => x.Title)
+            .OrderBy(g => g.Title)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
