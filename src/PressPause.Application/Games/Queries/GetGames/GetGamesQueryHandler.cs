@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using PressPause.Application.Common.Interfaces;
+using PressPause.Application.Common.Models;
 
 namespace PressPause.Application.Games.Queries.GetGames;
 
 public sealed class GetGamesQueryHandler
-    : IRequestHandler<GetGamesQuery, IReadOnlyList<GameDto>>
+    : IRequestHandler<GetGamesQuery, PagedResult<GameDto>>
 {
     private readonly IGameRepository _repository;
 
@@ -13,18 +14,28 @@ public sealed class GetGamesQueryHandler
         _repository = repository;
     }
 
-    public async Task<IReadOnlyList<GameDto>> Handle(
+    public async Task<PagedResult<GameDto>> Handle(
         GetGamesQuery request,
         CancellationToken cancellationToken)
     {
-        var games = await _repository.GetAllAsync(cancellationToken);
+        var (games, totalCount) = await _repository.GetPagedAsync(
+            request.Page,
+            request.PageSize,
+            cancellationToken);
 
-        return games
-            .Select(game => new GameDto(
-                game.Id,
-                game.Title,
-                game.Slug,
-                game.ReleaseDate))
-            .ToList();
+        return new PagedResult<GameDto>
+        {
+            Items = games
+                .Select(game => new GameDto(
+                    game.Id,
+                    game.Title,
+                    game.Slug,
+                    game.ReleaseDate))
+                .ToList(),
+
+            Page = request.Page,
+            PageSize = request.PageSize,
+            TotalCount = totalCount
+        };
     }
 }

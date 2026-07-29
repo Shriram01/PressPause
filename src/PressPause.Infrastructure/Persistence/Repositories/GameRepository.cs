@@ -24,13 +24,22 @@ internal sealed class GameRepository : IGameRepository
             .AnyAsync(x => x.Slug == slug, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Game>> GetAllAsync(
+    public async Task<(IReadOnlyList<Game> Items, int TotalCount)> GetPagedAsync(
+        int page,
+        int pageSize,
         CancellationToken cancellationToken)
     {
-        return await _context.Games
-            .AsNoTracking()
+        var query = _context.Games.AsNoTracking();
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
             .OrderBy(x => x.Title)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
     }
 
     public async Task<Game?> GetByIdAsync(

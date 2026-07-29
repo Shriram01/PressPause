@@ -1,5 +1,9 @@
 ﻿using MediatR;
+using PressPause.Application.Common.Models;
 
 namespace PressPause.Application.Games.Queries.GetGames;
 
-public sealed record GetGamesQuery : IRequest<IReadOnlyList<GameDto>>;
+public sealed record GetGamesQuery(
+    int Page = 1,
+    int PageSize = 20)
+    : IRequest<PagedResult<GameDto>>;
