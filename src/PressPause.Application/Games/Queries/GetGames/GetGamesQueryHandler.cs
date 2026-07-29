@@ -22,6 +22,8 @@ public sealed class GetGamesQueryHandler
             request.Page,
             request.PageSize,
             request.Search,
+            request.SortBy,
+            request.Descending,
             cancellationToken);
 
         return new PagedResult<GameDto>

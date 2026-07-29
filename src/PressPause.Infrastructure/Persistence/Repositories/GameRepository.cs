@@ -28,10 +28,13 @@ internal sealed class GameRepository : IGameRepository
         int page,
         int pageSize,
         string? search,
+        string? sortBy,
+        bool descending,
         CancellationToken cancellationToken)
     {
         IQueryable<Game> query = _context.Games.AsNoTracking();
 
+        // Search
         if (!string.IsNullOrWhiteSpace(search))
         {
             query = query.Where(g =>
@@ -39,10 +42,27 @@ internal sealed class GameRepository : IGameRepository
                 g.Slug.Contains(search));
         }
 
+        // Sorting
+        query = (sortBy?.ToLower()) switch
+        {
+            "title" => descending
+                ? query.OrderByDescending(g => g.Title)
+                : query.OrderBy(g => g.Title),
+
+            "releasedate" => descending
+                ? query.OrderByDescending(g => g.ReleaseDate)
+                : query.OrderBy(g => g.ReleaseDate),
+
+            "createdat" => descending
+                ? query.OrderByDescending(g => g.CreatedAt)
+                : query.OrderBy(g => g.CreatedAt),
+
+            _ => query.OrderBy(g => g.Title)
+        };
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query
-            .OrderBy(g => g.Title)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);

@@ -12,6 +12,8 @@ public interface IGameRepository
         int page,
         int pageSize,
         string? search,
+        string? sortBy,
+        bool descending,
         CancellationToken cancellationToken);
 
     Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken);

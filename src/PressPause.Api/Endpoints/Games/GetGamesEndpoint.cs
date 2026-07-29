@@ -19,7 +19,9 @@ public static class GetGamesEndpoint
                         new GetGamesQuery(
                             pagination.Page,
                             pagination.PageSize,
-                            pagination.Search));
+                            pagination.Search,
+                            pagination.SortBy,
+                            pagination.Descending));
 
                     return Results.Ok(result);
                 })

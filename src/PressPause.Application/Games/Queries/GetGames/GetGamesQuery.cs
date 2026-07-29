@@ -6,5 +6,7 @@ namespace PressPause.Application.Games.Queries.GetGames;
 public sealed record GetGamesQuery(
     int Page = 1,
     int PageSize = 20,
-    string? Search = null)
+    string? Search = null,
+    string? SortBy = null,
+    bool Descending = false)
     : IRequest<PagedResult<GameDto>>;
