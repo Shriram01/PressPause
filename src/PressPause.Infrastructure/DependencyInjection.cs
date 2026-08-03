@@ -1,13 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using PressPause.Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PressPause.Infrastructure.Persistence;
 using PressPause.Application.Common.Interfaces;
 using PressPause.Infrastructure.Persistence.Repositories;
+using PressPause.Infrastructure.Authentication;
+using PressPause.Application.Authentication.Interfaces;
+using PressPause.Infrastructure.Authentication;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using PressPause.Application.Common.Behaviors;
+using PressPause.Application.Authentication.Interfaces;
+using PressPause.Infrastructure.Identity;
+using IdentityService = PressPause.Application.Authentication.Interfaces.IIdentityService;
 
 namespace PressPause.Infrastructure;
 
@@ -17,7 +25,8 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddDbContext<PressPauseDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IGameRepository, GameRepository>();
 
@@ -30,6 +39,27 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(
                 typeof(ValidationBehavior<,>));
         });
+
+        services
+            .AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services.Configure<JwtOptions>(
+            configuration.GetSection(JwtOptions.SectionName));
+
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        services.AddScoped<IdentityService, Identity.IdentityService>();
 
         return services;
     }

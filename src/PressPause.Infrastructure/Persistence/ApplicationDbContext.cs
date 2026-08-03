@@ -1,13 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PressPause.Domain.Common;
 using PressPause.Domain.Entities;
+using PressPause.Infrastructure.Identity;
 
 namespace PressPause.Infrastructure.Persistence;
 
-internal sealed class PressPauseDbContext : DbContext
+public sealed class ApplicationDbContext
+    : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 {
-    public PressPauseDbContext(DbContextOptions<PressPauseDbContext> options)
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
@@ -18,7 +22,8 @@ internal sealed class PressPauseDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PressPauseDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(ApplicationDbContext).Assembly);
     }
 
     public override async Task<int> SaveChangesAsync(

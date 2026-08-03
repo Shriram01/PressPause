@@ -6,9 +6,9 @@ namespace PressPause.Infrastructure.Persistence.Repositories;
 
 internal sealed class GameRepository : IGameRepository
 {
-    private readonly PressPauseDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public GameRepository(PressPauseDbContext context)
+    public GameRepository(ApplicationDbContext context)
     {
         _context = context;
     }
