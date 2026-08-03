@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using PressPause.Infrastructure.Authentication;
 using System.Text;
+using PressPause.Api.Endpoints.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,5 +68,7 @@ app.MapGetGameByIdEndpoint();
 app.MapUpdateGameEndpoint();
 
 app.MapDeleteGameEndpoint();
+
+app.MapRegisterEndpoint();
 
 app.Run();
