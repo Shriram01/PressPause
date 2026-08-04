@@ -20,6 +20,7 @@ public static class UpdateGameEndpoint
 
                     return Results.NoContent();
                 })
+            .RequireAuthorization()
             .WithName("UpdateGame")
             .WithTags("Games");
 

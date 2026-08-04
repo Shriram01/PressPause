@@ -8,13 +8,17 @@ using PressPause.Infrastructure.Authentication;
 using System.Text;
 using PressPause.Api.Endpoints.Authentication;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
+
 builder.Services.AddInfrastructure(builder.Configuration);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -70,5 +74,7 @@ app.MapUpdateGameEndpoint();
 app.MapDeleteGameEndpoint();
 
 app.MapRegisterEndpoint();
+
+app.MapLoginEndpoint();
 
 app.Run();

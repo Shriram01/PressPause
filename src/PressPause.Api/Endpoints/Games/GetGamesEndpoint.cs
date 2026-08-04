@@ -25,6 +25,7 @@ public static class GetGamesEndpoint
 
                     return Results.Ok(result);
                 })
+            .RequireAuthorization()
             .WithName("GetGames")
             .WithTags("Games");
 

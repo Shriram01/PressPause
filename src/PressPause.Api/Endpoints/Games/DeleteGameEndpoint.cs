@@ -15,6 +15,7 @@ public static class DeleteGameEndpoint
 
                     return Results.NoContent();
                 })
+            .RequireAuthorization()
             .WithName("DeleteGame")
             .WithTags("Games");
 

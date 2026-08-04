@@ -14,6 +14,7 @@ public static class CreateGameEndpoint
 
                     return Results.Created($"/api/games/{id}", id);
                 })
+            .RequireAuthorization()
             .WithName("CreateGame")
             .WithTags("Games");
 

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using PressPause.Application.Authentication.Commands.Register;
 
+
 namespace PressPause.Api.Endpoints.Authentication;
 
 public static class RegisterEndpoint
