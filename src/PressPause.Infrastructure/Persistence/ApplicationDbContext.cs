@@ -18,6 +18,10 @@ public sealed class ApplicationDbContext
 
     public DbSet<Game> Games => Set<Game>();
 
+    public DbSet<Platform> Platforms => Set<Platform>();
+
+    public DbSet<Genre> Genres => Set<Genre>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

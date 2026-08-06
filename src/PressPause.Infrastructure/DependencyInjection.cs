@@ -8,13 +8,9 @@ using PressPause.Application.Common.Interfaces;
 using PressPause.Infrastructure.Persistence.Repositories;
 using PressPause.Infrastructure.Authentication;
 using PressPause.Application.Authentication.Interfaces;
-using PressPause.Infrastructure.Authentication;
 using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using PressPause.Application.Common.Behaviors;
-using PressPause.Application.Authentication.Interfaces;
-using PressPause.Infrastructure.Identity;
 using IdentityService = PressPause.Application.Authentication.Interfaces.IIdentityService;
 
 namespace PressPause.Infrastructure;
@@ -60,6 +56,10 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddScoped<IdentityService, Identity.IdentityService>();
+
+        services.AddScoped<IPlatformRepository, PlatformRepository>();
+
+        services.AddScoped<IGenreRepository, GenreRepository>();
 
         return services;
     }

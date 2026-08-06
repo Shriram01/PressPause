@@ -1,22 +1,25 @@
+using PressPause.Api.Endpoints.Authentication;
 using PressPause.Api.Endpoints.Games;
+using PressPause.Api.Endpoints.Genres;
+using PressPause.Api.Endpoints.Platforms;
+using PressPause.Api.Extensions;
 using PressPause.Application;
 using PressPause.Infrastructure;
-using PressPause.Api.Extensions;
+using PressPause.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using PressPause.Infrastructure.Authentication;
 using System.Text;
-using PressPause.Api.Endpoints.Authentication;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
+// -----------------------------------------------------------------------------
+// Service Registration
+// -----------------------------------------------------------------------------
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
-
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -39,15 +42,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(jwt.SecretKey)),
 
             ValidateLifetime = true,
-
             ClockSkew = TimeSpan.Zero
         };
     });
 
 builder.Services.AddAuthorization();
 
-
 var app = builder.Build();
+
+// -----------------------------------------------------------------------------
+// Middleware
+// -----------------------------------------------------------------------------
 
 if (app.Environment.IsDevelopment())
 {
@@ -58,23 +63,45 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.UseGlobalExceptionHandling();
 
-app.MapCreateGameEndpoint();
-
-app.MapGetGamesEndpoint();
-
-app.MapGetGameByIdEndpoint();
-
-app.MapUpdateGameEndpoint();
-
-app.MapDeleteGameEndpoint();
+// -----------------------------------------------------------------------------
+// Authentication Endpoints
+// -----------------------------------------------------------------------------
 
 app.MapRegisterEndpoint();
-
 app.MapLoginEndpoint();
+
+// -----------------------------------------------------------------------------
+// Game Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapCreateGameEndpoint();
+app.MapGetGamesEndpoint();
+app.MapGetGameByIdEndpoint();
+app.MapUpdateGameEndpoint();
+app.MapDeleteGameEndpoint();
+
+// -----------------------------------------------------------------------------
+// Platform Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapCreatePlatformEndpoint();
+app.MapGetPlatformsEndpoint();
+app.MapGetPlatformByIdEndpoint();
+app.MapUpdatePlatformEndpoint();
+app.MapDeletePlatformEndpoint();
+
+// -----------------------------------------------------------------------------
+// Genre Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapCreateGenreEndpoint();
+app.MapGetGenresEndpoint();
+app.MapGetGenreByIdEndpoint();
+app.MapUpdateGenreEndpoint();
+app.MapDeleteGenreEndpoint();
 
 app.Run();

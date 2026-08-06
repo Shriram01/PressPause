@@ -8,8 +8,8 @@
     <ItemGroup>
         <Folder Include="Collections\"/>
         <Folder Include="Common\Mapping\"/>
+        <Folder Include="Endpoints\"/>
         <Folder Include="Games\DTOs\"/>
-        <Folder Include="Platforms\"/>
         <Folder Include="Reviews\"/>
         <Folder Include="Users\"/>
     </ItemGroup>
