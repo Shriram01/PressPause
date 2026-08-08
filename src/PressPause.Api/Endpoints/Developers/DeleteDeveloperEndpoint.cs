@@ -2,30 +2,29 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using PressPause.Application.Developers.Commands.UpdateDeveloper;
+using PressPause.Application.Developers.Commands.DeleteDeveloper;
 
 namespace PressPause.Api.Endpoints.Developers;
 
-public static class UpdateDeveloperEndpoint
+public static class DeleteDeveloperEndpoint
 {
-    public static IEndpointRouteBuilder MapUpdateDeveloperEndpoint(
+    public static IEndpointRouteBuilder MapDeleteDeveloperEndpoint(
         this IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/developer/{id:guid}",
+        app.MapDelete("/api/developers/{id:guid}",
                 async (
                     Guid id,
-                    UpdateDeveloperCommand command,
                     ISender sender) =>
                 {
                     var success = await sender.Send(
-                        command with { Id = id });
+                        new DeleteDeveloperCommand(id));
 
                     return success
                         ? Results.NoContent()
                         : Results.NotFound();
                 })
             .RequireAuthorization()
-            .WithName("UpdateDevelopers")
+            .WithName("DeleteDeveloper")
             .WithTags("Developers");
 
         return app;

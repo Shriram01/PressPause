@@ -63,6 +63,8 @@ public static class DependencyInjection
 
         services.AddScoped<IDeveloperRepository, DeveloperRepository>();
 
+        services.AddScoped<IPublisherRepository, PublisherRepository>();
+
         return services;
     }
 }

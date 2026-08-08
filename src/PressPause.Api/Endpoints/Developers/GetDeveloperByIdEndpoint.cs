@@ -11,7 +11,7 @@ public static class GetDeveloperByIdEndpoint
     public static IEndpointRouteBuilder MapGetDeveloperByIdEndpoint(
         this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/developer/{id:guid}",
+        app.MapGet("/api/developers/{id:guid}",
                 async (
                     Guid id,
                     ISender sender) =>

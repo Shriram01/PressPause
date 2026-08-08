@@ -11,7 +11,7 @@ public static class CreateDeveloperEndpoint
     public static IEndpointRouteBuilder MapCreateDeveloperEndpoint(
         this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/developer",
+        app.MapPost("/api/developers",
                 async (
                     CreateDeveloperCommand command,
                     ISender sender) =>

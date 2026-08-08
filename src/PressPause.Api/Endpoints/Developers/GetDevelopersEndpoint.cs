@@ -13,7 +13,7 @@ public static class GetDevelopersEndpoint
     public static IEndpointRouteBuilder MapGetDevelopersEndpoint(
         this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/developer",
+        app.MapGet("/api/developers",
                 async (
                     [AsParameters] PaginationRequest pagination,
                     ISender sender) =>
@@ -29,7 +29,7 @@ public static class GetDevelopersEndpoint
                     return Results.Ok(result);
                 })
             .RequireAuthorization()
-            .WithName("GetDevelopers")
+            .WithName("GetDeveloper")
             .WithTags("Developers");
 
         return app;

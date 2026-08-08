@@ -24,6 +24,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<Developer> Developers => Set<Developer>();
 
+    public DbSet<Publisher> Publishers => Set<Publisher>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
