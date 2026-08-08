@@ -111,7 +111,7 @@ app.MapDeleteGenreEndpoint();
 
 app.MapCreateDeveloperEndpoint();
 app.MapGetDeveloperByIdEndpoint();
-app.MapGetDeveloperByIdEndpoint();
+app.MapGetDevelopersEndpoint();
 app.MapUpdateDeveloperEndpoint();
 app.MapDeleteDeveloperEndpoint();
 
