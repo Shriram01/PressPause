@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using PressPause.Api.Endpoints.Developers;
+using PressPause.Api.Endpoints.Publishers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,5 +116,14 @@ app.MapGetDevelopersEndpoint();
 app.MapUpdateDeveloperEndpoint();
 app.MapDeleteDeveloperEndpoint();
 
+// -----------------------------------------------------------------------------
+// Publisher Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapCreatePublisherEndpoint();
+app.MapGetPublisherByIdEndpoint();
+app.MapGetPublishersEndpoint();
+app.MapUpdatePublisherEndpoint();
+app.MapDeletePublisherEndpoint();
 
 app.Run();
