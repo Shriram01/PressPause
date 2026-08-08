@@ -25,8 +25,8 @@ public static class UpdateGenreEndpoint
                         : Results.NotFound();
                 })
             .RequireAuthorization()
-            .WithName("UpdateGenre")
-            .WithTags("Genre");
+            .WithName("UpdateGenres")
+            .WithTags("Genres");
 
         return app;
     }

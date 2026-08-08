@@ -9,6 +9,7 @@ using PressPause.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using PressPause.Api.Endpoints.Developers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,5 +104,16 @@ app.MapGetGenresEndpoint();
 app.MapGetGenreByIdEndpoint();
 app.MapUpdateGenreEndpoint();
 app.MapDeleteGenreEndpoint();
+
+// -----------------------------------------------------------------------------
+// Developer Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapCreateDeveloperEndpoint();
+app.MapGetDeveloperByIdEndpoint();
+app.MapGetDeveloperByIdEndpoint();
+app.MapUpdateDeveloperEndpoint();
+app.MapDeleteDeveloperEndpoint();
+
 
 app.Run();

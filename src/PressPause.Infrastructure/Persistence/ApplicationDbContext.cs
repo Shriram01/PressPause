@@ -22,6 +22,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<Genre> Genres => Set<Genre>();
 
+    public DbSet<Developer> Developers => Set<Developer>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
