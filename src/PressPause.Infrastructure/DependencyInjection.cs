@@ -65,6 +65,8 @@ public static class DependencyInjection
 
         services.AddScoped<IPublisherRepository, PublisherRepository>();
 
+        services.AddScoped<IStoreRepository, StoreRepository>();
+
         return services;
     }
 }

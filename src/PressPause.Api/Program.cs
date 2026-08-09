@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using PressPause.Api.Endpoints.Developers;
 using PressPause.Api.Endpoints.Publishers;
+using PressPause.Api.Endpoints.Stores;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -125,5 +126,15 @@ app.MapGetPublisherByIdEndpoint();
 app.MapGetPublishersEndpoint();
 app.MapUpdatePublisherEndpoint();
 app.MapDeletePublisherEndpoint();
+
+// -----------------------------------------------------------------------------
+// Store Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapCreateStoreEndpoint();
+app.MapGetStoreByIdEndpoint();
+app.MapGetStoresEndpoint();
+app.MapUpdateStoreEndpoint();
+app.MapDeleteStoreEndpoint();
 
 app.Run();
