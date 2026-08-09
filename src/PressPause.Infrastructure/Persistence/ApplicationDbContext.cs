@@ -28,6 +28,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<Store> Stores => Set<Store>();
 
+    public DbSet<Tag> Tags => Set<Tag>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

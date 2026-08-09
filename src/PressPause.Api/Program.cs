@@ -12,6 +12,7 @@ using System.Text;
 using PressPause.Api.Endpoints.Developers;
 using PressPause.Api.Endpoints.Publishers;
 using PressPause.Api.Endpoints.Stores;
+using PressPause.Api.Endpoints.Tags;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -132,9 +133,19 @@ app.MapDeletePublisherEndpoint();
 // -----------------------------------------------------------------------------
 
 app.MapCreateStoreEndpoint();
-app.MapGetStoreByIdEndpoint();
+app.MapGetStoresEndpoint();
 app.MapGetStoresEndpoint();
 app.MapUpdateStoreEndpoint();
 app.MapDeleteStoreEndpoint();
+
+// -----------------------------------------------------------------------------
+// Store Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapCreateTagEndpoint();
+app.MapGetTagsEndpoint();
+app.MapGetTagsEndpoint();
+app.MapUpdateTagEndpoint();
+app.MapDeleteTagEndpoint();
 
 app.Run();
