@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 
-namespace PressPause.Application.Stores.Commands.UpdateStore;
+namespace PressPause.Application.Tags.Commands.UpdateTag;
 
 public sealed class UpdateTagCommandValidator
-    : AbstractValidator<UpdateStoreCommand>
+    : AbstractValidator<UpdateTagCommand>
 {
     public UpdateTagCommandValidator()
     {

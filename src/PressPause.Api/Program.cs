@@ -133,17 +133,17 @@ app.MapDeletePublisherEndpoint();
 // -----------------------------------------------------------------------------
 
 app.MapCreateStoreEndpoint();
-app.MapGetStoresEndpoint();
+app.MapGetStoreByIdEndpoint();
 app.MapGetStoresEndpoint();
 app.MapUpdateStoreEndpoint();
 app.MapDeleteStoreEndpoint();
 
 // -----------------------------------------------------------------------------
-// Store Endpoints
+// Tag Endpoints
 // -----------------------------------------------------------------------------
 
 app.MapCreateTagEndpoint();
-app.MapGetTagsEndpoint();
+app.MapGetTagByIdEndpoint();
 app.MapGetTagsEndpoint();
 app.MapUpdateTagEndpoint();
 app.MapDeleteTagEndpoint();
