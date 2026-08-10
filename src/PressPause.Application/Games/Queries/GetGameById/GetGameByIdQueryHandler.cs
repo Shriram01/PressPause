@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using PressPause.Application.Common.Interfaces;
+using PressPause.Application.Games.Queries.GetGames;
 
 namespace PressPause.Application.Games.Queries.GetGameById;
 
@@ -22,12 +23,22 @@ public sealed class GetGameByIdQueryHandler
             cancellationToken);
 
         if (game is null)
+        {
             return null;
+        }
 
         return new GameDetailsDto(
             game.Id,
             game.Title,
             game.Slug,
-            game.ReleaseDate);
+            game.ReleaseDate)
+        {
+            Platforms = game.GamePlatforms
+                .Select(x => new PlatformDto(
+                    x.Platform.Id,
+                    x.Platform.Name,
+                    x.Platform.Slug))
+                .ToList()
+        };
     }
 }

@@ -5,7 +5,7 @@ using PressPause.Application.Platforms.Queries.GetPlatforms;
 namespace PressPause.Application.Platforms.Queries.GetPlatformById;
 
 public sealed class GetPlatformByIdQueryHandler
-    : IRequestHandler<GetPlatformByIdQuery, PlatformDto?>
+    : IRequestHandler<GetPlatformByIdQuery, PlatformDto>
 {
     private readonly IPlatformRepository _repository;
 

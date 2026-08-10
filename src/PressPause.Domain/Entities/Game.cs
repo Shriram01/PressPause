@@ -20,4 +20,7 @@ public sealed class Game : AuditableEntity
     public string Slug { get; set; } = string.Empty;
 
     public DateOnly? ReleaseDate { get; set; }
+
+    public ICollection<GamePlatform> GamePlatforms { get; private set; }
+        = new List<GamePlatform>();
 }

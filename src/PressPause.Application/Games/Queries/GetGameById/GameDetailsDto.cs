@@ -4,4 +4,7 @@ public sealed record GameDetailsDto(
     Guid Id,
     string Title,
     string Slug,
-    DateOnly? ReleaseDate);
+    DateOnly? ReleaseDate)
+{
+    public IReadOnlyList<PlatformDto> Platforms { get; init; } = [];
+}

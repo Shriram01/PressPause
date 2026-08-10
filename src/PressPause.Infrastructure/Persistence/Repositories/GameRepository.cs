@@ -32,7 +32,10 @@ internal sealed class GameRepository : IGameRepository
         bool descending,
         CancellationToken cancellationToken)
     {
-        IQueryable<Game> query = _context.Games.AsNoTracking();
+        IQueryable<Game> query = _context.Games
+            .AsNoTracking()
+            .Include(x => x.GamePlatforms)
+            .ThenInclude(x => x.Platform);
 
         // Search
         if (!string.IsNullOrWhiteSpace(search))
@@ -76,6 +79,8 @@ internal sealed class GameRepository : IGameRepository
     {
         return await _context.Games
             .AsNoTracking()
+            .Include(x => x.GamePlatforms)
+            .ThenInclude(x => x.Platform)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 

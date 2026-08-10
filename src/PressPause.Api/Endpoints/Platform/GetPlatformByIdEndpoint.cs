@@ -11,7 +11,8 @@ public static class GetPlatformByIdEndpoint
     public static IEndpointRouteBuilder MapGetPlatformByIdEndpoint(
         this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/platforms/{id:guid}",
+        app.MapGet(
+                "/api/platforms/{id:guid}",
                 async (
                     Guid id,
                     ISender sender) =>

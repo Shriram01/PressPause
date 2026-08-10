@@ -27,4 +27,7 @@ public sealed class Platform : AuditableEntity
         Name = name;
         Slug = slug;
     }
+
+    public ICollection<GamePlatform> GamePlatforms { get; private set; }
+        = new List<GamePlatform>();
 }

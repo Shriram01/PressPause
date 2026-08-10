@@ -191,6 +191,21 @@ namespace PressPause.Infrastructure.Migrations
                     b.ToTable("Games", (string)null);
                 });
 
+            modelBuilder.Entity("PressPause.Domain.Entities.GamePlatform", b =>
+                {
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PlatformId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("GameId", "PlatformId");
+
+                    b.HasIndex("PlatformId");
+
+                    b.ToTable("GamePlatforms", (string)null);
+                });
+
             modelBuilder.Entity("PressPause.Domain.Entities.Genre", b =>
                 {
                     b.Property<Guid>("Id")
@@ -480,6 +495,35 @@ namespace PressPause.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PressPause.Domain.Entities.GamePlatform", b =>
+                {
+                    b.HasOne("PressPause.Domain.Entities.Game", "Game")
+                        .WithMany("GamePlatforms")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PressPause.Domain.Entities.Platform", "Platform")
+                        .WithMany("GamePlatforms")
+                        .HasForeignKey("PlatformId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Platform");
+                });
+
+            modelBuilder.Entity("PressPause.Domain.Entities.Game", b =>
+                {
+                    b.Navigation("GamePlatforms");
+                });
+
+            modelBuilder.Entity("PressPause.Domain.Entities.Platform", b =>
+                {
+                    b.Navigation("GamePlatforms");
                 });
 #pragma warning restore 612, 618
         }

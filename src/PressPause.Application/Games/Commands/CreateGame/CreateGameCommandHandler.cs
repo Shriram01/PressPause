@@ -8,10 +8,14 @@ public sealed class CreateGameCommandHandler
     : IRequestHandler<CreateGameCommand, Guid>
 {
     private readonly IGameRepository _gameRepository;
+    private readonly IPlatformRepository _platformRepository;
 
-    public CreateGameCommandHandler(IGameRepository gameRepository)
+    public CreateGameCommandHandler(
+        IGameRepository gameRepository,
+        IPlatformRepository platformRepository)
     {
         _gameRepository = gameRepository;
+        _platformRepository = platformRepository;
     }
 
     public async Task<Guid> Handle(
@@ -24,7 +28,21 @@ public sealed class CreateGameCommandHandler
 
         if (slugExists)
         {
-            throw new InvalidOperationException("A game with this slug already exists.");
+            throw new InvalidOperationException(
+                "A game with this slug already exists.");
+        }
+
+        foreach (var platformId in request.PlatformIds.Distinct())
+        {
+            bool platformExists = await _platformRepository.ExistsAsync(
+                platformId,
+                cancellationToken);
+
+            if (!platformExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Platform '{platformId}' was not found.");
+            }
         }
 
         var game = new Game
@@ -34,8 +52,20 @@ public sealed class CreateGameCommandHandler
             ReleaseDate = request.ReleaseDate
         };
 
-        await _gameRepository.AddAsync(game, cancellationToken);
-        await _gameRepository.SaveChangesAsync(cancellationToken);
+        foreach (var platformId in request.PlatformIds.Distinct())
+        {
+            game.GamePlatforms.Add(
+                new GamePlatform(
+                    game.Id,
+                    platformId));
+        }
+
+        await _gameRepository.AddAsync(
+            game,
+            cancellationToken);
+
+        await _gameRepository.SaveChangesAsync(
+            cancellationToken);
 
         return game.Id;
     }

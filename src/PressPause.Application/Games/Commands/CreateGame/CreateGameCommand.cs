@@ -5,4 +5,8 @@ namespace PressPause.Application.Games.Commands.CreateGame;
 public sealed record CreateGameCommand(
     string Title,
     string Slug,
-    DateOnly? ReleaseDate) : IRequest<Guid>;
+    DateOnly? ReleaseDate) : IRequest<Guid>
+{
+    public IReadOnlyList<Guid> PlatformIds { get; init; }
+        = new List<Guid>();
+}

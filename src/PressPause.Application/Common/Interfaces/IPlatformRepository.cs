@@ -4,6 +4,10 @@ namespace PressPause.Application.Common.Interfaces;
 
 public interface IPlatformRepository
 {
+    Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+    
     Task<Platform?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);

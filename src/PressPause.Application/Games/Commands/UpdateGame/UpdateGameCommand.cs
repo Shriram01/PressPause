@@ -6,4 +6,8 @@ public sealed record UpdateGameCommand(
     Guid Id,
     string Title,
     string Slug,
-    DateOnly? ReleaseDate) : IRequest;
+    DateOnly? ReleaseDate) : IRequest
+{
+    public IReadOnlyList<Guid> PlatformIds { get; init; }
+        = new List<Guid>();
+}
