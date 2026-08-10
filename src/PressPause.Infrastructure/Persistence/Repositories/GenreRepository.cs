@@ -13,6 +13,14 @@ public sealed class GenreRepository : IGenreRepository
         _context = context;
     }
 
+    public async Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Genres
+            .AnyAsync(x => x.Id == id, cancellationToken);
+    }
+    
     public async Task<Genre?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)

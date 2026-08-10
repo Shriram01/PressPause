@@ -4,6 +4,9 @@ namespace PressPause.Domain.Entities;
 
 public sealed class Genre : AuditableEntity
 {
+    public ICollection<GameGenre> GameGenres { get; private set; }
+        = new List<GameGenre>();
+
     private Genre()
     {
     }

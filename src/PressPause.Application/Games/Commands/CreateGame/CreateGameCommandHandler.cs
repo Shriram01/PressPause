@@ -9,13 +9,16 @@ public sealed class CreateGameCommandHandler
 {
     private readonly IGameRepository _gameRepository;
     private readonly IPlatformRepository _platformRepository;
+    private readonly IGenreRepository _genreRepository;
 
     public CreateGameCommandHandler(
         IGameRepository gameRepository,
-        IPlatformRepository platformRepository)
+        IPlatformRepository platformRepository,
+        IGenreRepository genreRepository)
     {
         _gameRepository = gameRepository;
         _platformRepository = platformRepository;
+        _genreRepository = genreRepository;
     }
 
     public async Task<Guid> Handle(
@@ -44,6 +47,19 @@ public sealed class CreateGameCommandHandler
                     $"Platform '{platformId}' was not found.");
             }
         }
+        
+        foreach (var genreId in request.GenreIds.Distinct())
+        {
+            bool genreExists = await _genreRepository.ExistsAsync(
+                genreId,
+                cancellationToken);
+
+            if (!genreExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Genre '{genreId}' was not found.");
+            }
+        }
 
         var game = new Game
         {
@@ -58,6 +74,14 @@ public sealed class CreateGameCommandHandler
                 new GamePlatform(
                     game.Id,
                     platformId));
+        }
+        
+        foreach (var genreId in request.GenreIds.Distinct())
+        {
+            game.GameGenres.Add(
+                new GameGenre(
+                    game.Id,
+                    genreId));
         }
 
         await _gameRepository.AddAsync(

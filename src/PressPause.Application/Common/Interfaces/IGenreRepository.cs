@@ -4,6 +4,10 @@ namespace PressPause.Application.Common.Interfaces;
 
 public interface IGenreRepository
 {
+    Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+    
     Task<Genre?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);

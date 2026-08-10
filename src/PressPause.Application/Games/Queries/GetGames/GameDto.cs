@@ -6,5 +6,9 @@ public sealed record GameDto(
     string Slug,
     DateOnly? ReleaseDate)
 {
-    public IReadOnlyList<PlatformDto> Platforms { get; init; } = [];
+    public IReadOnlyList<PlatformDto> Platforms { get; init; }
+        = new List<PlatformDto>();
+
+    public IReadOnlyList<GenreDto> Genres { get; init; }
+        = new List<GenreDto>();
 }

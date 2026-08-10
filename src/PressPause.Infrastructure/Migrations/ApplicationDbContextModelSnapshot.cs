@@ -191,6 +191,21 @@ namespace PressPause.Infrastructure.Migrations
                     b.ToTable("Games", (string)null);
                 });
 
+            modelBuilder.Entity("PressPause.Domain.Entities.GameGenre", b =>
+                {
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GenreId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("GameId", "GenreId");
+
+                    b.HasIndex("GenreId");
+
+                    b.ToTable("GameGenres", (string)null);
+                });
+
             modelBuilder.Entity("PressPause.Domain.Entities.GamePlatform", b =>
                 {
                     b.Property<Guid>("GameId")
@@ -497,6 +512,25 @@ namespace PressPause.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PressPause.Domain.Entities.GameGenre", b =>
+                {
+                    b.HasOne("PressPause.Domain.Entities.Game", "Game")
+                        .WithMany("GameGenres")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PressPause.Domain.Entities.Genre", "Genre")
+                        .WithMany("GameGenres")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Genre");
+                });
+
             modelBuilder.Entity("PressPause.Domain.Entities.GamePlatform", b =>
                 {
                     b.HasOne("PressPause.Domain.Entities.Game", "Game")
@@ -518,7 +552,14 @@ namespace PressPause.Infrastructure.Migrations
 
             modelBuilder.Entity("PressPause.Domain.Entities.Game", b =>
                 {
+                    b.Navigation("GameGenres");
+
                     b.Navigation("GamePlatforms");
+                });
+
+            modelBuilder.Entity("PressPause.Domain.Entities.Genre", b =>
+                {
+                    b.Navigation("GameGenres");
                 });
 
             modelBuilder.Entity("PressPause.Domain.Entities.Platform", b =>

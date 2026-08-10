@@ -35,7 +35,9 @@ internal sealed class GameRepository : IGameRepository
         IQueryable<Game> query = _context.Games
             .AsNoTracking()
             .Include(x => x.GamePlatforms)
-            .ThenInclude(x => x.Platform);
+            .ThenInclude(x => x.Platform)
+            .Include(x => x.GameGenres)
+            .ThenInclude(x => x.Genre);
 
         // Search
         if (!string.IsNullOrWhiteSpace(search))
@@ -81,6 +83,8 @@ internal sealed class GameRepository : IGameRepository
             .AsNoTracking()
             .Include(x => x.GamePlatforms)
             .ThenInclude(x => x.Platform)
+            .Include(x => x.GameGenres)
+            .ThenInclude(x => x.Genre)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 

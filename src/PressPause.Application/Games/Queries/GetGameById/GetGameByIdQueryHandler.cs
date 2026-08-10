@@ -38,6 +38,13 @@ public sealed class GetGameByIdQueryHandler
                     x.Platform.Id,
                     x.Platform.Name,
                     x.Platform.Slug))
+                .ToList(),
+
+            Genres = game.GameGenres
+                .Select(x => new GenreDto(
+                    x.Genre.Id,
+                    x.Genre.Name,
+                    x.Genre.Slug))
                 .ToList()
         };
     }

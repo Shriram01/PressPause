@@ -9,13 +9,16 @@ public sealed class UpdateGameCommandHandler
 {
     private readonly IGameRepository _repository;
     private readonly IPlatformRepository _platformRepository;
+    private readonly IGenreRepository _genreRepository;
 
     public UpdateGameCommandHandler(
         IGameRepository repository,
-        IPlatformRepository platformRepository)
+        IPlatformRepository platformRepository,
+        IGenreRepository genreRepository)
     {
         _repository = repository;
         _platformRepository = platformRepository;
+        _genreRepository = genreRepository;
     }
 
     public async Task Handle(
@@ -44,6 +47,19 @@ public sealed class UpdateGameCommandHandler
             }
         }
 
+        foreach (var genreId in request.GenreIds.Distinct())
+        {
+            bool genreExists = await _genreRepository.ExistsAsync(
+                genreId,
+                cancellationToken);
+
+            if (!genreExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Genre '{genreId}' was not found.");
+            }
+        }
+
         game.Update(
             request.Title,
             request.Slug,
@@ -57,6 +73,16 @@ public sealed class UpdateGameCommandHandler
                 new GamePlatform(
                     game.Id,
                     platformId));
+        }
+
+        game.GameGenres.Clear();
+
+        foreach (var genreId in request.GenreIds.Distinct())
+        {
+            game.GameGenres.Add(
+                new GameGenre(
+                    game.Id,
+                    genreId));
         }
 
         await _repository.SaveChangesAsync(

@@ -10,4 +10,7 @@ public sealed record UpdateGameCommand(
 {
     public IReadOnlyList<Guid> PlatformIds { get; init; }
         = new List<Guid>();
+
+    public IReadOnlyList<Guid> GenreIds { get; init; }
+        = new List<Guid>();
 }

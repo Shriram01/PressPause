@@ -23,4 +23,7 @@ public sealed class Game : AuditableEntity
 
     public ICollection<GamePlatform> GamePlatforms { get; private set; }
         = new List<GamePlatform>();
+
+    public ICollection<GameGenre> GameGenres { get; private set; }
+        = new List<GameGenre>();
 }
