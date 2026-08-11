@@ -11,17 +11,20 @@ public sealed class UpdateGameCommandHandler
     private readonly IPlatformRepository _platformRepository;
     private readonly IGenreRepository _genreRepository;
     private readonly IDeveloperRepository _developerRepository;
+    private readonly IPublisherRepository _publisherRepository;
 
     public UpdateGameCommandHandler(
         IGameRepository repository,
         IPlatformRepository platformRepository,
         IGenreRepository genreRepository,
-        IDeveloperRepository developerRepository)
+        IDeveloperRepository developerRepository,
+        IPublisherRepository publisherRepository)
     {
         _repository = repository;
         _platformRepository = platformRepository;
         _genreRepository = genreRepository;
         _developerRepository = developerRepository;
+        _publisherRepository = publisherRepository;
     }
 
     public async Task Handle(
@@ -78,6 +81,20 @@ public sealed class UpdateGameCommandHandler
                     $"Developer '{developerId}' was not found.");
             }
         }
+        
+        //Publisher Validation
+        foreach (var publisherId in request.PublisherIds.Distinct())
+        {
+            bool publisherExists = await _publisherRepository.ExistsAsync(
+                publisherId,
+                cancellationToken);
+
+            if (!publisherExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Publisher '{publisherId}' was not found.");
+            }
+        }
 
         game.Update(
             request.Title,
@@ -115,6 +132,17 @@ public sealed class UpdateGameCommandHandler
                 new GameDeveloper(
                     game.Id,
                     developerId));
+        }
+        
+        //Publisher Injection
+        game.GamePublishers.Clear();
+
+        foreach (var publisherId in request.PublisherIds.Distinct())
+        {
+            game.GamePublishers.Add(
+                new GamePublisher(
+                    game.Id,
+                    publisherId));
         }
 
         await _repository.SaveChangesAsync(

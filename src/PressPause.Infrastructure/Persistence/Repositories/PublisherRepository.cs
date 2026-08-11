@@ -8,6 +8,14 @@ public sealed class PublisherRepository : IPublisherRepository
 {
     private readonly ApplicationDbContext _context;
 
+    public async Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Publishers
+            .AnyAsync(x => x.Id == id, cancellationToken);
+    }
+    
     public PublisherRepository(ApplicationDbContext context)
     {
         _context = context;

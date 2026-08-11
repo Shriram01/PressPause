@@ -27,4 +27,7 @@ public sealed class Publisher : AuditableEntity
         Name = name;
         Slug = slug;
     }
+
+    public ICollection<GamePublisher> GamePublishers { get; private set; }
+        = new List<GamePublisher>();
 }

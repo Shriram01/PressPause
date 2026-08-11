@@ -39,7 +39,9 @@ internal sealed class GameRepository : IGameRepository
             .Include(x => x.GameGenres)
             .ThenInclude(x => x.Genre)
             .Include(x => x.GameDevelopers)
-            .ThenInclude(x => x.Developer);
+            .ThenInclude(x => x.Developer)
+            .Include(x => x.GamePublishers)
+            .ThenInclude(x => x.Publisher);
 
         // Search
         if (!string.IsNullOrWhiteSpace(search))
@@ -89,6 +91,8 @@ internal sealed class GameRepository : IGameRepository
             .ThenInclude(x => x.Genre)
             .Include(x => x.GameDevelopers)
             .ThenInclude(x => x.Developer)
+            .Include(x => x.GamePublishers)
+            .ThenInclude(x => x.Publisher)
             .FirstOrDefaultAsync(
                 x => x.Id == id,
                 cancellationToken);

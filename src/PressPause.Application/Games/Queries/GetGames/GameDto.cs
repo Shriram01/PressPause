@@ -14,4 +14,8 @@ public sealed record GameDto(
 
     public IReadOnlyList<DeveloperDto> Developers { get; init; }
         = new List<DeveloperDto>();
+    
+    public IReadOnlyList<PublisherDto> Publishers { get; init; }
+        = new List<PublisherDto>();
+    
 }

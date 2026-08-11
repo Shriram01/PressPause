@@ -11,17 +11,20 @@ public sealed class CreateGameCommandHandler
     private readonly IPlatformRepository _platformRepository;
     private readonly IGenreRepository _genreRepository;
     private readonly IDeveloperRepository _developerRepository;
+    private readonly IPublisherRepository _publisherRepository;
 
     public CreateGameCommandHandler(
         IGameRepository gameRepository,
         IPlatformRepository platformRepository,
         IGenreRepository genreRepository,
-        IDeveloperRepository developerRepository)
+        IDeveloperRepository developerRepository,
+        IPublisherRepository publisherRepository)
     {
         _gameRepository = gameRepository;
         _platformRepository = platformRepository;
         _genreRepository = genreRepository;
         _developerRepository = developerRepository;
+        _publisherRepository = publisherRepository;
     }
 
     public async Task<Guid> Handle(
@@ -79,6 +82,20 @@ public sealed class CreateGameCommandHandler
                     $"Developer '{developerId}' was not found.");
             }
         }
+        
+        //Publisher Validation
+        foreach (var publisherId in request.PublisherIds.Distinct())
+        {
+            bool publisherExists = await _publisherRepository.ExistsAsync(
+                publisherId,
+                cancellationToken);
+
+            if (!publisherExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Publisher '{publisherId}' was not found.");
+            }
+        }
 
         var game = new Game
         {
@@ -112,6 +129,15 @@ public sealed class CreateGameCommandHandler
                 new GameDeveloper(
                     game.Id,
                     developerId));
+        }
+        
+        //Publisher Injection
+        foreach (var publisherId in request.PublisherIds.Distinct())
+        {
+            game.GamePublishers.Add(
+                new GamePublisher(
+                    game.Id,
+                    publisherId));
         }
 
         await _gameRepository.AddAsync(

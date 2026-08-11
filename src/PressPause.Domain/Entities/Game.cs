@@ -29,4 +29,7 @@ public sealed class Game : AuditableEntity
 
     public ICollection<GameDeveloper> GameDevelopers { get; private set; }
         = new List<GameDeveloper>();
+
+    public ICollection<GamePublisher> GamePublishers { get; private set; }
+        = new List<GamePublisher>();
 }

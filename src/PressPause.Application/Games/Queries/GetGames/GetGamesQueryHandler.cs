@@ -54,6 +54,13 @@ public sealed class GetGamesQueryHandler
                             x.Developer.Id,
                             x.Developer.Name,
                             x.Developer.Slug))
+                        .ToList(),
+
+                    Publishers = game.GamePublishers
+                        .Select(x => new PublisherDto(
+                            x.Publisher.Id,
+                            x.Publisher.Name,
+                            x.Publisher.Slug))
                         .ToList()
                 })
                 .ToList(),
