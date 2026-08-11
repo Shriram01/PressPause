@@ -37,7 +37,9 @@ internal sealed class GameRepository : IGameRepository
             .Include(x => x.GamePlatforms)
             .ThenInclude(x => x.Platform)
             .Include(x => x.GameGenres)
-            .ThenInclude(x => x.Genre);
+            .ThenInclude(x => x.Genre)
+            .Include(x => x.GameDevelopers)
+            .ThenInclude(x => x.Developer);
 
         // Search
         if (!string.IsNullOrWhiteSpace(search))
@@ -85,7 +87,11 @@ internal sealed class GameRepository : IGameRepository
             .ThenInclude(x => x.Platform)
             .Include(x => x.GameGenres)
             .ThenInclude(x => x.Genre)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .Include(x => x.GameDevelopers)
+            .ThenInclude(x => x.Developer)
+            .FirstOrDefaultAsync(
+                x => x.Id == id,
+                cancellationToken);
     }
 
     public async Task<Game?> GetForUpdateAsync(

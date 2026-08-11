@@ -27,4 +27,7 @@ public sealed class Developer : AuditableEntity
         Name = name;
         Slug = slug;
     }
+
+    public ICollection<GameDeveloper> GameDevelopers { get; private set; }
+        = new List<GameDeveloper>();
 }

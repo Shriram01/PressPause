@@ -10,4 +10,7 @@ public sealed record GameDetailsDto(
 
     public IReadOnlyList<GenreDto> Genres { get; init; }
         = new List<GenreDto>();
+
+    public IReadOnlyList<DeveloperDto> Developers { get; init; }
+        = new List<DeveloperDto>();
 }

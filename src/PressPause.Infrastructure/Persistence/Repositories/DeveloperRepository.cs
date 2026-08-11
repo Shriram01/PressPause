@@ -8,6 +8,14 @@ public sealed class DeveloperRepository : IDeveloperRepository
 {
     private readonly ApplicationDbContext _context;
 
+    public async Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Developers
+            .AnyAsync(x => x.Id == id, cancellationToken);
+    }
+
     public DeveloperRepository(ApplicationDbContext context)
     {
         _context = context;

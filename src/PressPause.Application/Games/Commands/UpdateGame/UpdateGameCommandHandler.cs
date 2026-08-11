@@ -10,15 +10,18 @@ public sealed class UpdateGameCommandHandler
     private readonly IGameRepository _repository;
     private readonly IPlatformRepository _platformRepository;
     private readonly IGenreRepository _genreRepository;
+    private readonly IDeveloperRepository _developerRepository;
 
     public UpdateGameCommandHandler(
         IGameRepository repository,
         IPlatformRepository platformRepository,
-        IGenreRepository genreRepository)
+        IGenreRepository genreRepository,
+        IDeveloperRepository developerRepository)
     {
         _repository = repository;
         _platformRepository = platformRepository;
         _genreRepository = genreRepository;
+        _developerRepository = developerRepository;
     }
 
     public async Task Handle(
@@ -34,6 +37,7 @@ public sealed class UpdateGameCommandHandler
             throw new KeyNotFoundException("Game not found.");
         }
 
+        //Platform Validation
         foreach (var platformId in request.PlatformIds.Distinct())
         {
             bool platformExists = await _platformRepository.ExistsAsync(
@@ -47,6 +51,7 @@ public sealed class UpdateGameCommandHandler
             }
         }
 
+        //Genre Validation
         foreach (var genreId in request.GenreIds.Distinct())
         {
             bool genreExists = await _genreRepository.ExistsAsync(
@@ -60,11 +65,26 @@ public sealed class UpdateGameCommandHandler
             }
         }
 
+        //Developer Validation
+        foreach (var developerId in request.DeveloperIds.Distinct())
+        {
+            bool developerExists = await _developerRepository.ExistsAsync(
+                developerId,
+                cancellationToken);
+
+            if (!developerExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Developer '{developerId}' was not found.");
+            }
+        }
+
         game.Update(
             request.Title,
             request.Slug,
             request.ReleaseDate);
 
+        //Platform Injection
         game.GamePlatforms.Clear();
 
         foreach (var platformId in request.PlatformIds.Distinct())
@@ -75,14 +95,26 @@ public sealed class UpdateGameCommandHandler
                     platformId));
         }
 
+        //Genre Injection
         game.GameGenres.Clear();
 
-        foreach (var genreId in request.GenreIds.Distinct())
+       foreach (var genreId in request.GenreIds.Distinct())
         {
             game.GameGenres.Add(
                 new GameGenre(
                     game.Id,
                     genreId));
+        }
+
+        //Developer Injection
+        game.GameDevelopers.Clear();
+
+        foreach (var developerId in request.DeveloperIds.Distinct())
+        {
+            game.GameDevelopers.Add(
+                new GameDeveloper(
+                    game.Id,
+                    developerId));
         }
 
         await _repository.SaveChangesAsync(

@@ -45,6 +45,13 @@ public sealed class GetGameByIdQueryHandler
                     x.Genre.Id,
                     x.Genre.Name,
                     x.Genre.Slug))
+                .ToList(),
+
+            Developers = game.GameDevelopers
+                .Select(x => new DeveloperDto(
+                    x.Developer.Id,
+                    x.Developer.Name,
+                    x.Developer.Slug))
                 .ToList()
         };
     }

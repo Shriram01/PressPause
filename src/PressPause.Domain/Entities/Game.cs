@@ -26,4 +26,7 @@ public sealed class Game : AuditableEntity
 
     public ICollection<GameGenre> GameGenres { get; private set; }
         = new List<GameGenre>();
+
+    public ICollection<GameDeveloper> GameDevelopers { get; private set; }
+        = new List<GameDeveloper>();
 }
