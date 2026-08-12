@@ -19,4 +19,7 @@ public sealed record UpdateGameCommand(
     
     public IReadOnlyList<Guid> PublisherIds { get; init; }
         = new List<Guid>();
+    
+    public IReadOnlyList<Guid> StoreIds { get; init; }
+        = new List<Guid>();
 }

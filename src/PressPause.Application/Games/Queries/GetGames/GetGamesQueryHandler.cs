@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using PressPause.Application.Common.Interfaces;
 using PressPause.Application.Common.Models;
 
@@ -61,9 +61,17 @@ public sealed class GetGamesQueryHandler
                             x.Publisher.Id,
                             x.Publisher.Name,
                             x.Publisher.Slug))
+                        .ToList(),
+                    
+                    Stores = game.GameStores
+                        .Select(x => new StoreDto(
+                            x.Store.Id,
+                            x.Store.Name,
+                            x.Store.Slug))
                         .ToList()
                 })
                 .ToList(),
+
 
             Page = request.Page,
             PageSize = request.PageSize,

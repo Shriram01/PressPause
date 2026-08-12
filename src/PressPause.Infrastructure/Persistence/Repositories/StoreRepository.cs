@@ -8,6 +8,14 @@ public sealed class StoreRepository : IStoreRepository
 {
     private readonly ApplicationDbContext _context;
 
+    public async Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Stores
+            .AnyAsync(x => x.Id == id, cancellationToken);
+    }
+    
     public StoreRepository(ApplicationDbContext context)
     {
         _context = context;

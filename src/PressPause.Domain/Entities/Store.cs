@@ -27,4 +27,7 @@ public sealed class Store : AuditableEntity
         Name = name;
         Slug = slug;
     }
+
+    public ICollection<GameStore> GameStores { get; private set; }
+        = new List<GameStore>();
 }

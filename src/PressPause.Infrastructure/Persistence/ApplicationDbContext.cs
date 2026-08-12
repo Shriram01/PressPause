@@ -30,6 +30,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<Tag> Tags => Set<Tag>();
 
+    public DbSet<GameStore> GameStores => Set<GameStore>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

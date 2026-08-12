@@ -12,19 +12,22 @@ public sealed class CreateGameCommandHandler
     private readonly IGenreRepository _genreRepository;
     private readonly IDeveloperRepository _developerRepository;
     private readonly IPublisherRepository _publisherRepository;
+    private readonly IStoreRepository _storeRepository;
 
     public CreateGameCommandHandler(
         IGameRepository gameRepository,
         IPlatformRepository platformRepository,
         IGenreRepository genreRepository,
         IDeveloperRepository developerRepository,
-        IPublisherRepository publisherRepository)
+        IPublisherRepository publisherRepository,
+        IStoreRepository storeRepository)
     {
         _gameRepository = gameRepository;
         _platformRepository = platformRepository;
         _genreRepository = genreRepository;
         _developerRepository = developerRepository;
         _publisherRepository = publisherRepository;
+        _storeRepository = storeRepository;
     }
 
     public async Task<Guid> Handle(
@@ -96,6 +99,20 @@ public sealed class CreateGameCommandHandler
                     $"Publisher '{publisherId}' was not found.");
             }
         }
+        
+        //Store Validation
+        foreach (var storeId in request.StoreIds.Distinct())
+        {
+            bool storeExists = await _storeRepository.ExistsAsync(
+                storeId,
+                cancellationToken);
+
+            if (!storeExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Store '{storeId}' was not found.");
+            }
+        }
 
         var game = new Game
         {
@@ -138,6 +155,15 @@ public sealed class CreateGameCommandHandler
                 new GamePublisher(
                     game.Id,
                     publisherId));
+        }
+        
+        //Store Injection
+        foreach (var storeId in request.StoreIds.Distinct())
+        {
+            game.GameStores.Add(
+                new GameStore(
+                    game.Id,
+                    storeId));
         }
 
         await _gameRepository.AddAsync(

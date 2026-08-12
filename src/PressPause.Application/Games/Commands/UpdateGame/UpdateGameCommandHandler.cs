@@ -12,19 +12,22 @@ public sealed class UpdateGameCommandHandler
     private readonly IGenreRepository _genreRepository;
     private readonly IDeveloperRepository _developerRepository;
     private readonly IPublisherRepository _publisherRepository;
+    private readonly IStoreRepository _storeRepository;
 
     public UpdateGameCommandHandler(
         IGameRepository repository,
         IPlatformRepository platformRepository,
         IGenreRepository genreRepository,
         IDeveloperRepository developerRepository,
-        IPublisherRepository publisherRepository)
+        IPublisherRepository publisherRepository,
+        IStoreRepository storeRepository)
     {
         _repository = repository;
         _platformRepository = platformRepository;
         _genreRepository = genreRepository;
         _developerRepository = developerRepository;
         _publisherRepository = publisherRepository;
+        _storeRepository = storeRepository;
     }
 
     public async Task Handle(
@@ -95,6 +98,20 @@ public sealed class UpdateGameCommandHandler
                     $"Publisher '{publisherId}' was not found.");
             }
         }
+        
+        //Store Validation
+        foreach (var storeId in request.StoreIds.Distinct())
+        {
+            bool storeExists = await _storeRepository.ExistsAsync(
+                storeId,
+                cancellationToken);
+
+            if (!storeExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Store '{storeId}' was not found.");
+            }
+        }
 
         game.Update(
             request.Title,
@@ -143,6 +160,17 @@ public sealed class UpdateGameCommandHandler
                 new GamePublisher(
                     game.Id,
                     publisherId));
+        }
+        
+        //Store Injection
+        game.GameStores.Clear();
+
+        foreach (var storeId in request.StoreIds.Distinct())
+        {
+            game.GameStores.Add(
+                new GameStore(
+                    game.Id,
+                    storeId));
         }
 
         await _repository.SaveChangesAsync(

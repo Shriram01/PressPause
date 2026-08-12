@@ -59,6 +59,13 @@ public sealed class GetGameByIdQueryHandler
                     x.Publisher.Id,
                     x.Publisher.Name,
                     x.Publisher.Slug))
+                .ToList(),
+            
+            Stores = game.GameStores
+                .Select(x => new StoreDto(
+                    x.Store.Id,
+                    x.Store.Name,
+                    x.Store.Slug))
                 .ToList()
         };
     }

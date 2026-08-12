@@ -18,4 +18,7 @@ public sealed record CreateGameCommand(
     
     public IReadOnlyList<Guid> PublisherIds { get; init; }
         = new List<Guid>();
+    
+    public IReadOnlyList<Guid> StoreIds { get; init; }
+        = new List<Guid>();
 }
