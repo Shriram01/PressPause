@@ -8,29 +8,14 @@ public sealed class CreateGameCommandHandler
     : IRequestHandler<CreateGameCommand, Guid>
 {
     private readonly IGameRepository _gameRepository;
-    private readonly IPlatformRepository _platformRepository;
-    private readonly IGenreRepository _genreRepository;
-    private readonly IDeveloperRepository _developerRepository;
-    private readonly IPublisherRepository _publisherRepository;
-    private readonly IStoreRepository _storeRepository;
-    private readonly ITagRepository _tagRepository;
+    private readonly IGameRelationshipService _relationshipService;
 
     public CreateGameCommandHandler(
         IGameRepository gameRepository,
-        IPlatformRepository platformRepository,
-        IGenreRepository genreRepository,
-        IDeveloperRepository developerRepository,
-        IPublisherRepository publisherRepository,
-        IStoreRepository storeRepository,
-        ITagRepository tagRepository)
+        IGameRelationshipService relationshipService)
     {
         _gameRepository = gameRepository;
-        _platformRepository = platformRepository;
-        _genreRepository = genreRepository;
-        _developerRepository = developerRepository;
-        _publisherRepository = publisherRepository;
-        _storeRepository = storeRepository;
-        _tagRepository = tagRepository;
+        _relationshipService = relationshipService;
     }
 
     public async Task<Guid> Handle(
@@ -47,89 +32,14 @@ public sealed class CreateGameCommandHandler
                 "A game with this slug already exists.");
         }
 
-        //Platform Validation
-        foreach (var platformId in request.PlatformIds.Distinct())
-        {
-            bool platformExists = await _platformRepository.ExistsAsync(
-                platformId,
-                cancellationToken);
-
-            if (!platformExists)
-            {
-                throw new KeyNotFoundException(
-                    $"Platform '{platformId}' was not found.");
-            }
-        }
-
-        //Genre Validation
-        foreach (var genreId in request.GenreIds.Distinct())
-        {
-            bool genreExists = await _genreRepository.ExistsAsync(
-                genreId,
-                cancellationToken);
-
-            if (!genreExists)
-            {
-                throw new KeyNotFoundException(
-                    $"Genre '{genreId}' was not found.");
-            }
-        }
-
-        //Developer Validation
-        foreach (var developerId in request.DeveloperIds.Distinct())
-        {
-            bool developerExists = await _developerRepository.ExistsAsync(
-                developerId,
-                cancellationToken);
-
-            if (!developerExists)
-            {
-                throw new KeyNotFoundException(
-                    $"Developer '{developerId}' was not found.");
-            }
-        }
-        
-        //Publisher Validation
-        foreach (var publisherId in request.PublisherIds.Distinct())
-        {
-            bool publisherExists = await _publisherRepository.ExistsAsync(
-                publisherId,
-                cancellationToken);
-
-            if (!publisherExists)
-            {
-                throw new KeyNotFoundException(
-                    $"Publisher '{publisherId}' was not found.");
-            }
-        }
-        
-        //Store Validation
-        foreach (var storeId in request.StoreIds.Distinct())
-        {
-            bool storeExists = await _storeRepository.ExistsAsync(
-                storeId,
-                cancellationToken);
-
-            if (!storeExists)
-            {
-                throw new KeyNotFoundException(
-                    $"Store '{storeId}' was not found.");
-            }
-        }
-        
-        //Tag Validation
-        foreach (var TagId in request.TagIds.Distinct())
-        {
-            bool tagExists = await _tagRepository.ExistsAsync(
-                TagId,
-                cancellationToken);
-
-            if (!tagExists)
-            {
-                throw new KeyNotFoundException(
-                    $"Tag '{TagId}' was not found.");
-            }
-        }
+        await _relationshipService.ValidateAsync(
+            request.PlatformIds,
+            request.GenreIds,
+            request.DeveloperIds,
+            request.PublisherIds,
+            request.StoreIds,
+            request.TagIds,
+            cancellationToken);
 
         var game = new Game
         {
@@ -138,59 +48,14 @@ public sealed class CreateGameCommandHandler
             ReleaseDate = request.ReleaseDate
         };
 
-        //Platform Injection
-        foreach (var platformId in request.PlatformIds.Distinct())
-        {
-            game.GamePlatforms.Add(
-                new GamePlatform(
-                    game.Id,
-                    platformId));
-        }
-
-        //Genre Injection
-        foreach (var genreId in request.GenreIds.Distinct())
-        {
-            game.GameGenres.Add(
-                new GameGenre(
-                    game.Id,
-                    genreId));
-        }
-
-        //Developer Injection
-        foreach (var developerId in request.DeveloperIds.Distinct())
-        {
-            game.GameDevelopers.Add(
-                new GameDeveloper(
-                    game.Id,
-                    developerId));
-        }
-        
-        //Publisher Injection
-        foreach (var publisherId in request.PublisherIds.Distinct())
-        {
-            game.GamePublishers.Add(
-                new GamePublisher(
-                    game.Id,
-                    publisherId));
-        }
-        
-        //Store Injection
-        foreach (var storeId in request.StoreIds.Distinct())
-        {
-            game.GameStores.Add(
-                new GameStore(
-                    game.Id,
-                    storeId));
-        }
-        
-        //Tag Injection
-        foreach (var TagId in request.TagIds.Distinct())
-        {
-            game.GameTags.Add(
-                new GameTag(
-                    game.Id,
-                    TagId));
-        }
+        _relationshipService.SetRelationships(
+            game,
+            request.PlatformIds,
+            request.GenreIds,
+            request.DeveloperIds,
+            request.PublisherIds,
+            request.StoreIds,
+            request.TagIds);
 
         await _gameRepository.AddAsync(
             game,

@@ -34,6 +34,7 @@ internal sealed class GameRepository : IGameRepository
     {
         IQueryable<Game> query = _context.Games
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(x => x.GamePlatforms)
             .ThenInclude(x => x.Platform)
             .Include(x => x.GameGenres)
@@ -89,6 +90,7 @@ internal sealed class GameRepository : IGameRepository
     {
         return await _context.Games
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(x => x.GamePlatforms)
             .ThenInclude(x => x.Platform)
             .Include(x => x.GameGenres)
@@ -111,7 +113,15 @@ internal sealed class GameRepository : IGameRepository
         CancellationToken cancellationToken)
     {
         return await _context.Games
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .Include(x => x.GamePlatforms)
+            .Include(x => x.GameGenres)
+            .Include(x => x.GameDevelopers)
+            .Include(x => x.GamePublishers)
+            .Include(x => x.GameStores)
+            .Include(x => x.GameTags)
+            .FirstOrDefaultAsync(
+                x => x.Id == id,
+                cancellationToken);
     }
 
     public Task DeleteAsync(Game game, CancellationToken cancellationToken)

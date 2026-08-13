@@ -21,6 +21,6 @@ public sealed record GameDto(
     public IReadOnlyList<StoreDto> Stores { get; init; }
         = new List<StoreDto>();
 
-    public IReadOnlyCollection<TagDto> Tags { get; init; }
+    public IReadOnlyList<TagDto> Tags { get; init; }
         = new List<TagDto>();
 }
