@@ -27,4 +27,7 @@ public sealed class Tag : AuditableEntity
         Name = name;
         Slug = slug;
     }
+
+    public ICollection<GameTag> GameTags { get; private set; }
+        = new List<GameTag>();
 }

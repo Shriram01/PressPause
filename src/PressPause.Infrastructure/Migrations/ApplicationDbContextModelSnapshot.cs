@@ -266,6 +266,21 @@ namespace PressPause.Infrastructure.Migrations
                     b.ToTable("GameStores", (string)null);
                 });
 
+            modelBuilder.Entity("PressPause.Domain.Entities.GameTag", b =>
+                {
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("GameId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("GameTags", (string)null);
+                });
+
             modelBuilder.Entity("PressPause.Domain.Entities.Genre", b =>
                 {
                     b.Property<Guid>("Id")
@@ -652,6 +667,25 @@ namespace PressPause.Infrastructure.Migrations
                     b.Navigation("Store");
                 });
 
+            modelBuilder.Entity("PressPause.Domain.Entities.GameTag", b =>
+                {
+                    b.HasOne("PressPause.Domain.Entities.Game", "Game")
+                        .WithMany("GameTags")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PressPause.Domain.Entities.Tag", "Tag")
+                        .WithMany("GameTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("PressPause.Domain.Entities.Developer", b =>
                 {
                     b.Navigation("GameDevelopers");
@@ -668,6 +702,8 @@ namespace PressPause.Infrastructure.Migrations
                     b.Navigation("GamePublishers");
 
                     b.Navigation("GameStores");
+
+                    b.Navigation("GameTags");
                 });
 
             modelBuilder.Entity("PressPause.Domain.Entities.Genre", b =>
@@ -688,6 +724,11 @@ namespace PressPause.Infrastructure.Migrations
             modelBuilder.Entity("PressPause.Domain.Entities.Store", b =>
                 {
                     b.Navigation("GameStores");
+                });
+
+            modelBuilder.Entity("PressPause.Domain.Entities.Tag", b =>
+                {
+                    b.Navigation("GameTags");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,6 @@
-﻿namespace PressPause.Application.Games.Queries.GetGameById;
+﻿using PressPause.Application.Tags.Queries.GetTags;
+
+namespace PressPause.Application.Games.Queries.GetGameById;
 
 public sealed record GameDetailsDto(
     Guid Id,
@@ -19,4 +21,7 @@ public sealed record GameDetailsDto(
 
     public IReadOnlyList<StoreDto> Stores { get; init; }
         = new List<StoreDto>();
+
+    public IReadOnlyCollection<TagDto> Tags { get; init; }
+        = new List<TagDto>();
 }

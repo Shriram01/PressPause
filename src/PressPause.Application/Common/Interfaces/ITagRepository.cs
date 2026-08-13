@@ -4,6 +4,10 @@ namespace PressPause.Application.Common.Interfaces;
 
 public interface ITagRepository
 {
+    Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+    
     Task<Tag?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);

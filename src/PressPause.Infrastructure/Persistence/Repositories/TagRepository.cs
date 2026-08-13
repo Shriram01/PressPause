@@ -8,6 +8,14 @@ public sealed class TagRepository : ITagRepository
 {
     private readonly ApplicationDbContext _context;
 
+    public async Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Tags
+            .AnyAsync(x => x.Id == id, cancellationToken);
+    }
+    
     public TagRepository(ApplicationDbContext context)
     {
         _context = context;

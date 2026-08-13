@@ -35,4 +35,7 @@ public sealed class Game : AuditableEntity
 
     public ICollection<GameStore> GameStores { get; private set; }
         = new List<GameStore>();
+
+    public ICollection<GameTag> GameTags { get; private set; }
+        = new List<GameTag>();
 }

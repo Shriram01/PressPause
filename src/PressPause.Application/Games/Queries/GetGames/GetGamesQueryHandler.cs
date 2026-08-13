@@ -68,10 +68,16 @@ public sealed class GetGamesQueryHandler
                             x.Store.Id,
                             x.Store.Name,
                             x.Store.Slug))
+                        .ToList(),
+                
+                    Tags = game.GameTags
+                        .Select(x => new TagDto(
+                            x.Tag.Id,
+                            x.Tag.Name,
+                            x.Tag.Slug))
                         .ToList()
                 })
                 .ToList(),
-
 
             Page = request.Page,
             PageSize = request.PageSize,

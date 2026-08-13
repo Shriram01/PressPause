@@ -13,6 +13,7 @@ public sealed class CreateGameCommandHandler
     private readonly IDeveloperRepository _developerRepository;
     private readonly IPublisherRepository _publisherRepository;
     private readonly IStoreRepository _storeRepository;
+    private readonly ITagRepository _tagRepository;
 
     public CreateGameCommandHandler(
         IGameRepository gameRepository,
@@ -20,7 +21,8 @@ public sealed class CreateGameCommandHandler
         IGenreRepository genreRepository,
         IDeveloperRepository developerRepository,
         IPublisherRepository publisherRepository,
-        IStoreRepository storeRepository)
+        IStoreRepository storeRepository,
+        ITagRepository tagRepository)
     {
         _gameRepository = gameRepository;
         _platformRepository = platformRepository;
@@ -28,6 +30,7 @@ public sealed class CreateGameCommandHandler
         _developerRepository = developerRepository;
         _publisherRepository = publisherRepository;
         _storeRepository = storeRepository;
+        _tagRepository = tagRepository;
     }
 
     public async Task<Guid> Handle(
@@ -113,6 +116,20 @@ public sealed class CreateGameCommandHandler
                     $"Store '{storeId}' was not found.");
             }
         }
+        
+        //Tag Validation
+        foreach (var TagId in request.TagIds.Distinct())
+        {
+            bool tagExists = await _tagRepository.ExistsAsync(
+                TagId,
+                cancellationToken);
+
+            if (!tagExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Tag '{TagId}' was not found.");
+            }
+        }
 
         var game = new Game
         {
@@ -164,6 +181,15 @@ public sealed class CreateGameCommandHandler
                 new GameStore(
                     game.Id,
                     storeId));
+        }
+        
+        //Tag Injection
+        foreach (var TagId in request.TagIds.Distinct())
+        {
+            game.GameTags.Add(
+                new GameTag(
+                    game.Id,
+                    TagId));
         }
 
         await _gameRepository.AddAsync(

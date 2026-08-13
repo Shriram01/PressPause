@@ -13,6 +13,7 @@ public sealed class UpdateGameCommandHandler
     private readonly IDeveloperRepository _developerRepository;
     private readonly IPublisherRepository _publisherRepository;
     private readonly IStoreRepository _storeRepository;
+    private readonly ITagRepository _tagRepository;
 
     public UpdateGameCommandHandler(
         IGameRepository repository,
@@ -20,7 +21,8 @@ public sealed class UpdateGameCommandHandler
         IGenreRepository genreRepository,
         IDeveloperRepository developerRepository,
         IPublisherRepository publisherRepository,
-        IStoreRepository storeRepository)
+        IStoreRepository storeRepository,
+        ITagRepository tagRepository)
     {
         _repository = repository;
         _platformRepository = platformRepository;
@@ -28,6 +30,7 @@ public sealed class UpdateGameCommandHandler
         _developerRepository = developerRepository;
         _publisherRepository = publisherRepository;
         _storeRepository = storeRepository;
+        _tagRepository = tagRepository;
     }
 
     public async Task Handle(
@@ -112,6 +115,20 @@ public sealed class UpdateGameCommandHandler
                     $"Store '{storeId}' was not found.");
             }
         }
+        
+        //Tag Validation
+        foreach (var TagId in request.TagIds.Distinct())
+        {
+            bool tagExists = await _tagRepository.ExistsAsync(
+                TagId,
+                cancellationToken);
+
+            if (!tagExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Tag '{TagId}' was not found.");
+            }
+        }
 
         game.Update(
             request.Title,
@@ -171,6 +188,17 @@ public sealed class UpdateGameCommandHandler
                 new GameStore(
                     game.Id,
                     storeId));
+        }
+        
+        //Tag Injection
+        game.GameTags.Clear();
+
+        foreach (var tagId in request.TagIds.Distinct())
+        {
+            game.GameTags.Add(
+                new GameTag(
+                    game.Id,
+                    tagId));
         }
 
         await _repository.SaveChangesAsync(
