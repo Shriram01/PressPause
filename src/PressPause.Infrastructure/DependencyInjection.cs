@@ -12,7 +12,6 @@ using FluentValidation;
 using MediatR;
 using PressPause.Application.Common.Behaviors;
 using IdentityService = PressPause.Application.Authentication.Interfaces.IIdentityService;
-using PressPause.Application.Common.Interfaces;
 using PressPause.Application.Common.Services;
 
 namespace PressPause.Infrastructure;
