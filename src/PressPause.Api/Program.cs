@@ -3,16 +3,20 @@ using PressPause.Api.Endpoints.Games;
 using PressPause.Api.Endpoints.Genres;
 using PressPause.Api.Endpoints.Platforms;
 using PressPause.Api.Extensions;
-using PressPause.Application;
-using PressPause.Infrastructure;
-using PressPause.Infrastructure.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using PressPause.Api.Endpoints.Developers;
 using PressPause.Api.Endpoints.Publishers;
 using PressPause.Api.Endpoints.Stores;
 using PressPause.Api.Endpoints.Tags;
+using PressPause.Api.Endpoints.UserLibrary;
+using PressPause.Api.Endpoints.Users;
+using PressPause.Application;
+using PressPause.Infrastructure;
+using PressPause.Infrastructure.Authentication;
+using PressPause.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +25,24 @@ var builder = WebApplication.CreateBuilder(args);
 // -----------------------------------------------------------------------------
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.ParameterLocation.Header,
+        Description = "Enter your JWT token."
+    });
+
+    options.AddSecurityRequirement(document => new Microsoft.OpenApi.OpenApiSecurityRequirement
+    {
+        [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -53,6 +74,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+if (app.Environment.IsEnvironment("Testing"))
+{
+    app.MapGet("/api/test/admin", () => Results.Ok())
+        .RequireAuthorization(policy => policy.RequireRole("Admin"));
+}
+
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await IdentityRoleSeeder.SeedAsync(app.Services);
+}
+
 
 // -----------------------------------------------------------------------------
 // Middleware
@@ -148,4 +181,15 @@ app.MapGetTagsEndpoint();
 app.MapUpdateTagEndpoint();
 app.MapDeleteTagEndpoint();
 
+// -----------------------------------------------------------------------------
+// User Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapGetCurrentUserEndpoint();
+app.MapUserProfileEndpoints();
+app.MapUserLibraryEndpoints();
+
+
 app.Run();
+
+public partial class Program;

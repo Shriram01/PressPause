@@ -14,7 +14,7 @@ public static class CreateGameEndpoint
 
                     return Results.Created($"/api/games/{id}", id);
                 })
-            .RequireAuthorization()
+            .RequireAuthorization(policy => policy.RequireRole("Admin"))
             .WithName("CreateGame")
             .WithTags("Games");
 

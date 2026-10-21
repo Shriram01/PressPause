@@ -15,7 +15,7 @@ public static class DeleteGameEndpoint
 
                     return Results.NoContent();
                 })
-            .RequireAuthorization()
+            .RequireAuthorization(policy => policy.RequireRole("Admin"))
             .WithName("DeleteGame")
             .WithTags("Games");
 

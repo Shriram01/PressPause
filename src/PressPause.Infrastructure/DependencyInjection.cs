@@ -1,20 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity;
-using PressPause.Infrastructure.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PressPause.Infrastructure.Persistence;
-using PressPause.Application.Common.Interfaces;
-using PressPause.Infrastructure.Persistence.Repositories;
-using PressPause.Infrastructure.Authentication;
-using PressPause.Application.Authentication.Interfaces;
-using FluentValidation;
-using MediatR;
-using PressPause.Application.Common.Behaviors;
-using IdentityService = PressPause.Application.Authentication.Interfaces.IIdentityService;
-using PressPause.Application.Common.Services;
 
 namespace PressPause.Infrastructure;
+
+using PressPause.Infrastructure.Identity;
+using PressPause.Infrastructure.Persistence;
+using PressPause.Infrastructure.Persistence.Repositories;
+using PressPause.Infrastructure.Authentication;
+using PressPause.Application.Common.Interfaces;
+using PressPause.Application.Authentication.Interfaces;
+using PressPause.Application.Common.Behaviors;
+using PressPause.Application.Common.Services;
+using IdentityService = PressPause.Application.Authentication.Interfaces.IIdentityService;
 
 public static class DependencyInjection
 {
@@ -71,6 +72,10 @@ public static class DependencyInjection
         services.AddScoped<ITagRepository, TagRepository>();
 
         services.AddScoped<IGameRelationshipService, GameRelationshipService>();
+
+        services.AddScoped<IUserProfileService, UserProfileService>();
+
+        services.AddScoped<IUserGameRepository, UserGameRepository>();
 
         return services;
     }

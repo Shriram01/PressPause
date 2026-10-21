@@ -25,15 +25,37 @@ public sealed class PostgreSqlFixture : IAsyncLifetime
 
     public async Task DisposeAsync()
     {
+        EnsureTestDatabase();
+
         await using var context = CreateDbContext();
         await context.Database.EnsureDeletedAsync();
     }
 
     public async Task ResetDatabaseAsync()
     {
+        EnsureTestDatabase();
+
         await using var context = CreateDbContext();
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
+    }
+
+    private void EnsureTestDatabase()
+    {
+        var builder = new DbConnectionStringBuilder
+        {
+            ConnectionString = ConnectionString
+        };
+
+        if (!builder.TryGetValue("Database", out var database) ||
+            !string.Equals(
+                database?.ToString(),
+                DatabaseName,
+                StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                $"Integration tests may only recreate the {DatabaseName} database.");
+        }
     }
 
     public ApplicationDbContext CreateDbContext()

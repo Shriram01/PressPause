@@ -11,7 +11,6 @@
         <Folder Include="Endpoints\"/>
         <Folder Include="Games\DTOs\"/>
         <Folder Include="Reviews\"/>
-        <Folder Include="Users\"/>
     </ItemGroup>
 
     <ItemGroup>

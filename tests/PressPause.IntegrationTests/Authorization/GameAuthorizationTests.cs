@@ -209,7 +209,9 @@ public sealed class GameAuthorizationTests
     }
 }
 
-internal sealed record TestRoleProvider(string? Role);
+internal sealed record TestRoleProvider(
+    string? Role,
+    string UserId = "integration-test-user");
 
 internal sealed class TestAuthHandler
     : AuthenticationHandler<AuthenticationSchemeOptions>

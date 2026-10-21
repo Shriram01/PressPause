@@ -42,6 +42,16 @@ public sealed class IdentityService : IIdentityService
                 createResult.Errors.Select(e => e.Description));
         }
 
+        var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
+        if (!roleResult.Succeeded)
+        {
+            await _userManager.DeleteAsync(user);
+
+            return Result.Failure(
+                roleResult.Errors.Select(e => e.Description));
+        }
+
         return Result.Success();
     }
 

@@ -7,9 +7,14 @@ public sealed class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public ExceptionHandlingMiddleware(RequestDelegate next)
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+    public ExceptionHandlingMiddleware(
+        RequestDelegate next,
+        ILogger<ExceptionHandlingMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -51,9 +56,27 @@ public sealed class ExceptionHandlingMiddleware
             await context.Response.WriteAsync(
                 JsonSerializer.Serialize(response));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            if (context.RequestServices
+                .GetRequiredService<IWebHostEnvironment>()
+                .IsEnvironment("Testing"))
+            {
+                _logger.LogError(
+                    ex,
+                    "TEST DIAGNOSTIC: Exception in {Method} {Path}",
+                    context.Request.Method,
+                    context.Request.Path);
+            }
+
+            _logger.LogError(
+                ex,
+                "An unhandled exception occurred while processing {Method} {Path}.",
+                context.Request.Method,
+                context.Request.Path);
+
+            context.Response.StatusCode =
+                StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
 
             var response = new

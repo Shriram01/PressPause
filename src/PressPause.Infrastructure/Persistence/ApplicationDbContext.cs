@@ -32,6 +32,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<GameStore> GameStores => Set<GameStore>();
 
+    public DbSet<UserGame> UserGames => Set<UserGame>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

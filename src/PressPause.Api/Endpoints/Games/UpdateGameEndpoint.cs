@@ -20,7 +20,7 @@ public static class UpdateGameEndpoint
 
                     return Results.NoContent();
                 })
-            .RequireAuthorization()
+            .RequireAuthorization(policy => policy.RequireRole("Admin"))
             .WithName("UpdateGame")
             .WithTags("Games");
 
