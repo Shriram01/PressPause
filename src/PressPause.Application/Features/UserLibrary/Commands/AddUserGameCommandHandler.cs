@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using PressPause.Application.Common.Exceptions;
 using PressPause.Application.Common.Interfaces;
 using PressPause.Domain.Entities;
 
@@ -38,7 +39,7 @@ public sealed class AddUserGameCommandHandler
 
         if (existingUserGame is not null)
         {
-            throw new InvalidOperationException(
+            throw new ConflictException(
                 "This game is already in the user's library.");
         }
 

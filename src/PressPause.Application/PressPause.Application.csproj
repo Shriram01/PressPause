@@ -7,6 +7,7 @@
 
     <ItemGroup>
         <Folder Include="Collections\"/>
+        <Folder Include="Common\Exceptions\" />
         <Folder Include="Common\Mapping\"/>
         <Folder Include="Endpoints\"/>
         <Folder Include="Games\DTOs\"/>

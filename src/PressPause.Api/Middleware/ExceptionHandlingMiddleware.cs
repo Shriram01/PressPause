@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using PressPause.Application.Common.Exceptions;
 using System.Text.Json;
 
 namespace PressPause.Api.Middleware;
@@ -50,6 +51,20 @@ public sealed class ExceptionHandlingMiddleware
             var response = new
             {
                 status = 404,
+                title = ex.Message
+            };
+
+            await context.Response.WriteAsync(
+                JsonSerializer.Serialize(response));
+        }
+        catch (ConflictException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status409Conflict;
+            context.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                status = 409,
                 title = ex.Message
             };
 

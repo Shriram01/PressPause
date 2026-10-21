@@ -238,8 +238,8 @@ internal sealed class TestAuthHandler
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, "integration-test-user"),
-            new Claim(ClaimTypes.Name, "integration-test-user"),
+            new Claim(ClaimTypes.NameIdentifier, roleProvider.UserId),
+            new Claim(ClaimTypes.Name, roleProvider.UserId),
             new Claim(ClaimTypes.Role, roleProvider.Role)
         };
 
