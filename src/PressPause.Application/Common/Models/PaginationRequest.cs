@@ -1,4 +1,4 @@
-﻿namespace PressPause.Application.Common.Models;
+namespace PressPause.Application.Common.Models;
 
 public sealed class PaginationRequest
 {
@@ -11,4 +11,8 @@ public sealed class PaginationRequest
     public string? SortBy { get; init; }
 
     public bool Descending { get; init; }
+
+    public Guid? GenreId { get; init; }
+
+    public Guid? PlatformId { get; init; }
 }
