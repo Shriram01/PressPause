@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PressPause.Application.Common.Models;
 using PressPause.Application.Games.Queries.GetGames;
@@ -21,7 +21,9 @@ public static class GetGamesEndpoint
                             pagination.PageSize,
                             pagination.Search,
                             pagination.SortBy,
-                            pagination.Descending));
+                            pagination.Descending,
+                            pagination.GenreId,
+                            pagination.PlatformId));
 
                     return Results.Ok(result);
                 })
