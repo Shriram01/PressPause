@@ -30,6 +30,8 @@ internal sealed class GameRepository : IGameRepository
         string? search,
         string? sortBy,
         bool descending,
+        Guid? genreId,
+        Guid? platformId,
         CancellationToken cancellationToken)
     {
         IQueryable<Game> query = _context.Games
@@ -54,6 +56,19 @@ internal sealed class GameRepository : IGameRepository
             query = query.Where(g =>
                 g.Title.Contains(search) ||
                 g.Slug.Contains(search));
+        }
+
+        // Filters
+        if (genreId.HasValue)
+        {
+            query = query.Where(g =>
+                g.GameGenres.Any(gg => gg.GenreId == genreId.Value));
+        }
+
+        if (platformId.HasValue)
+        {
+            query = query.Where(g =>
+                g.GamePlatforms.Any(gp => gp.PlatformId == platformId.Value));
         }
 
         // Sorting
