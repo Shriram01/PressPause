@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using PressPause.Application.Common.Models;
 
 namespace PressPause.Application.Games.Queries.GetGames;
@@ -8,5 +8,7 @@ public sealed record GetGamesQuery(
     int PageSize = 20,
     string? Search = null,
     string? SortBy = null,
-    bool Descending = false)
+    bool Descending = false,
+    Guid? GenreId = null,
+    Guid? PlatformId = null)
     : IRequest<PagedResult<GameDto>>;
