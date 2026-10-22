@@ -24,6 +24,8 @@ public sealed class GetGamesQueryHandler
             request.Search,
             request.SortBy,
             request.Descending,
+            request.GenreId,
+            request.PlatformId,
             cancellationToken);
 
         return new PagedResult<GameDto>
@@ -62,14 +64,14 @@ public sealed class GetGamesQueryHandler
                             x.Publisher.Name,
                             x.Publisher.Slug))
                         .ToList(),
-                    
+
                     Stores = game.GameStores
                         .Select(x => new StoreDto(
                             x.Store.Id,
                             x.Store.Name,
                             x.Store.Slug))
                         .ToList(),
-                
+
                     Tags = game.GameTags
                         .Select(x => new TagDto(
                             x.Tag.Id,
