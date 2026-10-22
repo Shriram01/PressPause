@@ -1,4 +1,4 @@
-﻿using PressPause.Domain.Entities;
+using PressPause.Domain.Entities;
 
 namespace PressPause.Application.Common.Interfaces;
 
@@ -14,6 +14,8 @@ public interface IGameRepository
         string? search,
         string? sortBy,
         bool descending,
+        Guid? genreId,
+        Guid? platformId,
         CancellationToken cancellationToken);
 
     Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
