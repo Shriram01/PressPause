@@ -1,4 +1,3 @@
-
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -158,9 +157,9 @@ public sealed class GameCatalogFilteringTests
             .WithWebHostBuilder(builder =>
             {
                 builder.UseEnvironment("Testing");
-                builder.ConfigureAppConfiguration((_, configurationBuilder) =>
-                {
-                    builder.ConfigureAppConfiguration((_, configurationBuilder) =>
+
+                builder.ConfigureAppConfiguration(
+                    (_, configurationBuilder) =>
                     {
                         configurationBuilder.AddInMemoryCollection(
                             new Dictionary<string, string?>
@@ -174,7 +173,6 @@ public sealed class GameCatalogFilteringTests
                                 ["Jwt:ExpiryMinutes"] = "60"
                             });
                     });
-                });
             });
     }
 

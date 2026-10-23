@@ -1,18 +1,10 @@
 namespace PressPause.Application.Common.Models;
 
-public sealed class PaginationRequest
-{
-    public int Page { get; init; } = 1;
-
-    public int PageSize { get; init; } = 20;
-
-    public string? Search { get; init; }
-
-    public string? SortBy { get; init; }
-
-    public bool Descending { get; init; }
-
-    public Guid? GenreId { get; init; }
-
-    public Guid? PlatformId { get; init; }
-}
+public sealed record PaginationRequest(
+    int Page = 1,
+    int PageSize = 20,
+    string? Search = null,
+    string? SortBy = null,
+    bool Descending = false,
+    Guid? GenreId = null,
+    Guid? PlatformId = null);
