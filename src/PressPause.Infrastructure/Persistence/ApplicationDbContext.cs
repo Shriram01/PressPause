@@ -24,8 +24,6 @@ public sealed class ApplicationDbContext
 
     public DbSet<Developer> Developers => Set<Developer>();
 
-    public DbSet<Publisher> Publishers => Set<Publisher>();
-
     public DbSet<Store> Stores => Set<Store>();
 
     public DbSet<Tag> Tags => Set<Tag>();
@@ -33,6 +31,8 @@ public sealed class ApplicationDbContext
     public DbSet<GameStore> GameStores => Set<GameStore>();
 
     public DbSet<UserGame> UserGames => Set<UserGame>();
+    
+    public DbSet<Publisher> Publishers => Set<Publisher>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

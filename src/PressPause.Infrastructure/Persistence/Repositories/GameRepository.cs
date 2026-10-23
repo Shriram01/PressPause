@@ -88,7 +88,6 @@ internal sealed class GameRepository : IGameRepository
 
             _ => query.OrderBy(g => g.Title)
         };
-
         var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query
