@@ -9,6 +9,7 @@ using PressPause.Api.Endpoints.Stores;
 using PressPause.Api.Endpoints.Tags;
 using PressPause.Api.Endpoints.UserLibrary;
 using PressPause.Api.Endpoints.Users;
+using PressPause.Api.Endpoints.Reviews;
 using PressPause.Application;
 using PressPause.Infrastructure;
 using PressPause.Infrastructure.Authentication;
@@ -16,6 +17,7 @@ using PressPause.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -188,6 +190,12 @@ app.MapDeleteTagEndpoint();
 app.MapGetCurrentUserEndpoint();
 app.MapUserProfileEndpoints();
 app.MapUserLibraryEndpoints();
+
+// -----------------------------------------------------------------------------
+// User Endpoints
+// -----------------------------------------------------------------------------
+
+app.MapReviewEndpoints();
 
 
 app.Run();
