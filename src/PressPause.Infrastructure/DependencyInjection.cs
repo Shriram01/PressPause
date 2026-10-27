@@ -23,7 +23,6 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
- 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
@@ -77,6 +76,8 @@ public static class DependencyInjection
         services.AddScoped<IUserProfileService, UserProfileService>();
 
         services.AddScoped<IUserGameRepository, UserGameRepository>();
+
+        services.AddScoped<IReviewRepository, ReviewRepository>();
 
         return services;
     }

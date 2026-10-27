@@ -14,8 +14,5 @@ public sealed class CreateGameCommandValidator : AbstractValidator<CreateGameCom
             .NotEmpty()
             .MaximumLength(200);
 
-        RuleFor(x => x.ReleaseDate)
-            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
-            .When(x => x.ReleaseDate.HasValue);
-    }
+   }
 }

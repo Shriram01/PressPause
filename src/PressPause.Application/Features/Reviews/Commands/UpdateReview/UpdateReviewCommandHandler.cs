@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using PressPause.Application.Common.Exceptions;
 using PressPause.Application.Common.Interfaces;
 
 namespace PressPause.Application.Features.Reviews.Commands;
@@ -16,12 +15,8 @@ public sealed class UpdateReviewCommandHandler(
             request.ReviewId,
             cancellationToken);
 
-        if (review is null)
+        if (review is null || review.UserId != request.UserId)
             throw new KeyNotFoundException("Review was not found.");
-
-        if (review.UserId != request.UserId)
-            throw new UnauthorizedAccessException(
-                "You can only update your own reviews.");
 
         review.Update(request.Rating, request.Text);
 

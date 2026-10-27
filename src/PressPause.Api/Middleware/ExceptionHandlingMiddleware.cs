@@ -7,7 +7,6 @@ namespace PressPause.Api.Middleware;
 public sealed class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
-
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
     public ExceptionHandlingMiddleware(
@@ -26,7 +25,8 @@ public sealed class ExceptionHandlingMiddleware
         }
         catch (ValidationException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.StatusCode =
+                StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
 
             var response = new
@@ -41,11 +41,13 @@ public sealed class ExceptionHandlingMiddleware
             };
 
             await context.Response.WriteAsync(
-                JsonSerializer.Serialize(response));
+                JsonSerializer.Serialize(response),
+                context.RequestAborted);
         }
         catch (KeyNotFoundException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            context.Response.StatusCode =
+                StatusCodes.Status404NotFound;
             context.Response.ContentType = "application/json";
 
             var response = new
@@ -55,11 +57,13 @@ public sealed class ExceptionHandlingMiddleware
             };
 
             await context.Response.WriteAsync(
-                JsonSerializer.Serialize(response));
+                JsonSerializer.Serialize(response),
+                context.RequestAborted);
         }
         catch (ConflictException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status409Conflict;
+            context.Response.StatusCode =
+                StatusCodes.Status409Conflict;
             context.Response.ContentType = "application/json";
 
             var response = new
@@ -69,21 +73,27 @@ public sealed class ExceptionHandlingMiddleware
             };
 
             await context.Response.WriteAsync(
-                JsonSerializer.Serialize(response));
+                JsonSerializer.Serialize(response),
+                context.RequestAborted);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            context.Response.StatusCode =
+                StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                status = 403,
+                title = "You do not have permission to perform this action."
+            };
+
+            await context.Response.WriteAsync(
+                JsonSerializer.Serialize(response),
+                context.RequestAborted);
         }
         catch (Exception ex)
         {
-            if (context.RequestServices
-                .GetRequiredService<IWebHostEnvironment>()
-                .IsEnvironment("Testing"))
-            {
-                _logger.LogError(
-                    ex,
-                    "TEST DIAGNOSTIC: Exception in {Method} {Path}",
-                    context.Request.Method,
-                    context.Request.Path);
-            }
-
             _logger.LogError(
                 ex,
                 "An unhandled exception occurred while processing {Method} {Path}.",
@@ -101,7 +111,8 @@ public sealed class ExceptionHandlingMiddleware
             };
 
             await context.Response.WriteAsync(
-                JsonSerializer.Serialize(response));
+                JsonSerializer.Serialize(response),
+                context.RequestAborted);
         }
     }
 }

@@ -38,21 +38,28 @@ public static class ReviewEndpoints
                 new { id = reviewId });
         });
 
+
         group.MapGet("/", async (
                 Guid gameId,
-                int page,
-                int pageSize,
+                int? page,
+                int? pageSize,
                 ISender sender) =>
             {
-                page = page < 1 ? 1 : page;
-                pageSize = pageSize < 1 ? 20 : Math.Min(pageSize, 100);
+                var currentPage = page is null or < 1 ? 1 : page.Value;
+                var currentPageSize = pageSize is null or < 1
+                    ? 20
+                    : Math.Min(pageSize.Value, 100);
 
                 var result = await sender.Send(
-                    new GetGameReviewsQuery(gameId, page, pageSize));
+                    new GetGameReviewsQuery(
+                        gameId,
+                        currentPage,
+                        currentPageSize));
 
                 return Results.Ok(result);
             })
             .AllowAnonymous();
+
 
         group.MapPut("/{reviewId:guid}", async (
             Guid reviewId,
